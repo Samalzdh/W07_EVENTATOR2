@@ -46,7 +46,7 @@ gem "bootsnap", require: false
 
 gem 'dotenv-rails'
 
-gem "letter_opener", group: :development
+gem "faker"
 
 gem 'devise'
 
