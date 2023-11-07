@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     
   end
   def check_user 
-    @user = User.find(id: params[:id])
+    @user = User.find(params[:id])
     if current_user.id != @user.id
       redirect_to root_path
     end
