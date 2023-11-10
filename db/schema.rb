@@ -10,9 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_07_141239) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_08_164525) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.string "stripe_customer_id"
@@ -33,6 +38,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_07_141239) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "administrator_id"
+    t.index ["administrator_id"], name: "index_events_on_administrator_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -53,4 +60,5 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_07_141239) do
 
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "users"
+  add_foreign_key "events", "users", column: "administrator_id"
 end

@@ -8,6 +8,8 @@ class EventsController < ApplicationController
 
   # GET /events/1 or /events/1.json
   def show
+    @event = Event.find(params[:id])
+    
   end
 
   # GET /events/new
@@ -17,17 +19,20 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
+    if current_user != @event.administrator 
+      redirect_to event_url(@event)
+    end
   end
 
   # POST /events or /events.json
   def create
     @event = Event.new(event_params)
-
+    @event.administrator = current_user
     respond_to do |format|
       if @event.save
         format.html { redirect_to event_url(@event), notice: "Event was successfully created." }
         format.json { render :show, status: :created, location: @event }
-        @user.role = 2
+  
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @event.errors, status: :unprocessable_entity }
@@ -50,11 +55,10 @@ class EventsController < ApplicationController
 
   # DELETE /events/1 or /events/1.json
   def destroy
-    @event.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to events_url, notice: "Event was successfully destroyed." }
-      format.json { head :no_content }
+    if current_user != @event.administrator
+      redirect_to event_url(@event)
+    else 
+      @event.destroy
     end
   end
 

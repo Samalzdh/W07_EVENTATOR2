@@ -1,10 +1,26 @@
-<p style="color: green"><%= notice %></p>
+  <p style="color: green"><%= notice %></p>
 
-<%= render @event %>
+  <%= render @event %>
 
-<div>
-  <%= link_to "Edit this event", edit_event_path(@event) %> |
-  <%= link_to "Back to events", events_path %>
+  <div>
+    <% if current_user != @event.administrator && Attendance.where(user_id: current_user.id, event: @event).none? %>
+        <%= button_to "Passer commande", checkout_create_path(total: @event.price, event_id: @event.id), class: "btn btn-primary", data: {turbo: false} %>
+      <% else %>
+        <p> T'es inscrit chef paye pas 2 fois</p>
+    <% end %>
 
-  <%= button_to "Destroy this event", @event, method: :delete %>
+  </div>
+
+
+  <div>
+    <%= link_to "Back to events", events_path %>
+    <% if current_user == @event.administrator %>
+      <%= link_to "Edit this event", edit_event_path(@event) %> 
+      <%= button_to "Destroy this event", @event, method: :delete %>
+    <% end %>
+  </div>
+  </div>
+  <div class="card-footer text-body-secondary">
+    <p class="card-text">Créé par: <%= @event.administrator.email %></p>
+  </div>
 </div>
